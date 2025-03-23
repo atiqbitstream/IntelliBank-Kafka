@@ -12,5 +12,18 @@ export class NotificationServiceService {
     return {status:'success', message: `Welcome email sent to ${email}`};
   }
 
+  sendSuccessNotification(data: {
+    transactionId:string;
+    from:string;
+    to:string;
+    amount:number;
+  })
+  {
+    const message = `Transaction ${data.transactionId} succeeded: $${data.amount} transferred from ${data.from} to ${data.to}`;
+    this.logger.log(message);
+
+    return {status: 'success', message};
+  }
+
   
 }
