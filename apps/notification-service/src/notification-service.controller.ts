@@ -16,5 +16,29 @@ export class NotificationServiceController {
      return this.notificationService.sendWelcomeEmail(data.email);
   }
 
+  @MessagePattern('transaction.processed')
+  handleTransaction(@Payload() data:{
+    success: boolean;
+    transactionId:string;
+    from:string;
+    to:string;
+    amount:number;
+    error: string;
+  })
+  {
+    if(data.success)
+    {
+      return this.notificationService.sendSuccessNotification({
+        transactionId:data.transactionId,
+        from: data.from,
+        to:data.to,
+        amount:data.amount
+      });
+    }else{
+        return this.notificationService
+      }
+    }
+  }
+
   
 }
