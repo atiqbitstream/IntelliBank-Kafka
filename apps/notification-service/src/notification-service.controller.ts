@@ -35,10 +35,15 @@ export class NotificationServiceController {
         amount:data.amount
       });
     }else{
-        return this.notificationService
+        return this.notificationService.sendFailureNotification({
+          transactionId: data.transactionId,
+          error: data.error,
+          from: data.from,
+          amount: data.amount
+        })
       }
     }
   }
 
   
-}
+
