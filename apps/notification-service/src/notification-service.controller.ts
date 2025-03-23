@@ -1,12 +1,20 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Logger } from '@nestjs/common';
 import { NotificationServiceService } from './notification-service.service';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 
 @Controller()
 export class NotificationServiceController {
-  constructor(private readonly notificationServiceService: NotificationServiceService) {}
 
-  @Get()
-  getHello(): string {
-    return this.notificationServiceService.getHello();
+  private readonly logger = new Logger(NotificationServiceController.name);
+
+  constructor(private readonly notificationService: NotificationServiceService) {}
+
+  @MessagePattern('customer.created')
+  handleCustomerCreated(@Payload() data : {email:string})
+  {
+     this.logger.log(`New Customer created: ${data.email}`);
+     return this.notificationService.sendWelcomeEmail(data.email);
   }
+
+  
 }
