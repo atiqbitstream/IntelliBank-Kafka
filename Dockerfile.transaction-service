@@ -1,0 +1,22 @@
+FROM node:18-alpine
+
+# Install pnpm
+RUN npm install -g pnpm
+
+WORKDIR /app
+
+COPY package*.json ./
+COPY tsconfig*.json ./
+COPY nest-cli.json ./
+
+RUN pnpm install 
+
+COPY . .
+
+# Use pnpm to run the locally installed NestJS CLI
+RUN pnpm exec nest build transaction-service
+
+EXPOSE 3000
+
+# Start the customer-service app
+CMD ["node", "dist/apps/transaction-service/main"]
