@@ -29,7 +29,7 @@ jobs:
 
       - name: Build & Push Docker Image (Customer Service)
         run: |
-          docker build -t au.icr.io/mycodeengine/customer-service:latest ./customer-service
+          docker build -t au.icr.io/mycodeengine/customer-service:latest -f Dockerfile.customer-service .
           docker push au.icr.io/mycodeengine/customer-service:latest
 
       - name: Deploy Customer Service to Code Engine
@@ -38,7 +38,7 @@ jobs:
 
       - name: Build & Push Docker Image (Transaction Service)
         run: |
-          docker build -t au.icr.io/mycodeengine/transaction-service:latest ./transaction-service
+          docker build -t au.icr.io/mycodeengine/transaction-service:latest -f Dockerfile.transaction-service .
           docker push au.icr.io/mycodeengine/transaction-service:latest
 
       - name: Deploy Transaction Service to Code Engine
@@ -47,7 +47,7 @@ jobs:
 
       - name: Build and Push Docker Image(Notification Service)
         run: |
-          docker build -t au.icr.io/mycodeengine/notification-service:latest ./notification-service
+          docker build -t au.icr.io/mycodeengine/notification-service:latest -f Dockerfile.notification-service .
           docker push au.icr.io/mycodeengine/notification-service:latest
 
       - name: Deploy Notification Service to Code Engine
