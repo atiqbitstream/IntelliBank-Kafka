@@ -1,0 +1,55 @@
+name: Deploy to IBM Cloud Code Engine
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install IBM Cloud CLI and plugins
+        run: |
+          curl -fsSL https://clis.cloud.ibm.com/install/linux | sh
+          ibmcloud plugin install code-engine
+          ibmcloud plugin install event-streams  # Install Event Streams plugin
+          ibmcloud login --apikey ${{ secrets.IBM_CLOUD_API_KEY }} -r au-syd
+          docker login -u iamapikey -p ${{ secrets.IBM_CLOUD_API_KEY }} au.icr.io
+          ibmcloud target -g Default
+          ibmcloud ce project select -n my-kafka-project
+          
+      - name: Initialize Event Streams plugin
+        run: |
+          ibmcloud es init  # Initialize the Event Streams plugin and select your instance
+
+
+      - name: Build & Push Docker Image (Customer Service)
+        run: |
+          docker build -t au.icr.io/mycodeengine/customer-service:latest ./customer-service
+          docker push au.icr.io/mycodeengine/customer-service:latest
+
+      - name: Deploy Customer Service to Code Engine
+        run: |
+          ibmcloud ce application update --name customer-service --image au.icr.io/mycodeengine/customer-service:latest
+
+      - name: Build & Push Docker Image (Transaction Service)
+        run: |
+          docker build -t au.icr.io/mycodeengine/transaction-service:latest ./transaction-service
+          docker push au.icr.io/mycodeengine/transaction-service:latest
+
+      - name: Deploy Transaction Service to Code Engine
+        run: |
+          ibmcloud ce application update --name transaction-service --image au.icr.io/mycodeengine/transaction-service:latest
+
+      - name: Build and Push Docker Image(Notification Service)
+        run: |
+          docker build -t au.icr.io/mycodeengine/notification-service:latest ./notification-service
+          docker push au.icr.io/mycodeengine/notification-service:latest
+
+      - name: Deploy Notification Service to Code Engine
+        run: |
+          ibmcloud ce application update --name notification-service --image au.icr.io/mycodeengine/notification-service:latest
