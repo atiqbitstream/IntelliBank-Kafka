@@ -1,23 +1,18 @@
 import { Module } from '@nestjs/common';
 import { NotificationServiceController } from './notification-service.controller';
 import { NotificationServiceService } from './notification-service.service';
-import { ClientsModule, Transport } from '@nestjs/microservices';
+import { ClientsModule } from '@nestjs/microservices';
+import { KafkaConnectionUtils } from '../kafka-connection.utils';
 
 @Module({
   imports: [
     ClientsModule.register([
       {
         name: 'KAFKA_SERVICE',
-        transport: Transport.KAFKA,
-        options: {
-          client: {
-            clientId: 'notification-service-client',
-            brokers: JSON.parse(process.env.EVENT_STREAMS_KAFKA_BROKERS_SASL),
-          },
-          consumer: {
-            groupId: 'notification-group',
-          },
-        }
+        ...KafkaConnectionUtils.createKafkaOptions({
+          clientId: 'notification-service-client',
+          groupId: 'notification-group'
+        })
       }
     ])
   ],

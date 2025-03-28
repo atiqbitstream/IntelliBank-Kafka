@@ -12,11 +12,13 @@ export class TransactionServiceController {
 ) 
 {}
 
+
   @Post('transactions')
   initiateTransaction(@Body() data: {from:string; to:string; amount: number, transactionId:string})
   {
     this.kafkaClient.emit('transaction.requested',data);
   }
+
 
   @MessagePattern('transaction.requested')
   async processTransaction(@Payload() data: {
@@ -38,14 +40,14 @@ export class TransactionServiceController {
 
       if(!result.success)
       {
-        this.kafkaClient.emit('transaction failed',{
+        this.kafkaClient.emit('transaction.failed',{
           key: data.transactionId,
           value: result
         });
       }
     }catch(error){
       this.logger.error(`Transaction processing error: ${error.message}`);
-      this.kafkaClient.emit('transaction error',{
+      this.kafkaClient.emit('transaction.error',{
         key: data.transactionId,
         value: {
           ...data,

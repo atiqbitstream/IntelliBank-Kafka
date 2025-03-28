@@ -18,12 +18,12 @@ export class TransactionServiceService {
 
   if(!this.accounts.has(transaction.from))
   {
-    throw new error(`Sender account ${transaction.from} not found`);
+    throw new Error(`Sender account ${transaction.from} not found`);
   }
 
   if(!this.accounts.has(transaction.to))
   {
-    throw new error(`Recipient account ${transaction.to} not found`)
+    throw new Error(`Recipient account ${transaction.to} not found`)
   }
 
   if(this.accounts.get(transaction.from) < transaction.amount)

@@ -1,23 +1,18 @@
 import { Module } from '@nestjs/common';
 import { TransactionServiceController } from './transaction-service.controller';
 import { TransactionServiceService } from './transaction-service.service';
-import { ClientsModule, Transport } from '@nestjs/microservices';
+import { ClientsModule } from '@nestjs/microservices';
+import { KafkaConnectionUtils } from '../kafka-connection.utils';
 
 @Module({
   imports: [
     ClientsModule.register([
       {
         name: 'KAFKA_SERVICE',
-        transport: Transport.KAFKA,
-        options: {
-          client: {
-            clientId: 'transaction-service-client',
-            brokers: JSON.parse(process.env.EVENT_STREAMS_KAFKA_BROKERS_SASL),
-          },
-          consumer: {
-            groupId: 'transaction-processing-group',
-          },
-        }
+        ...KafkaConnectionUtils.createKafkaOptions({
+          clientId: 'transaction-service-client',
+          groupId: 'transaction-processing-group'
+        })
       }
     ])
   ],
