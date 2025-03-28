@@ -136,6 +136,18 @@ This project demonstrates a **distributed, event-driven microservices architectu
 ## **Event-Driven Architecture with IBM Event Streams**
 
 
+📂 Repository Structure
+```bash
+.
+├── apps/
+│   ├── customer-service/      # Customer registration and event emission
+│   ├── transaction-service/   # Transaction processing core
+│   └── notification-service/  # Event-driven notifications
+├── .github/workflows/         # CI/CD pipelines for IBM Cloud deployment
+├── docker/                    # Dockerfiles for each service
+├── nest-cli.json              # Monorepo configuration
+└── kafka-connection-utils/    # Reusable Kafka client setup (SSL, retries, logging)
+```
 
 
 ## **1. Clean Up Existing Resources**
