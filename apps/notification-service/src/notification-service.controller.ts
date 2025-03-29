@@ -43,6 +43,13 @@ export class NotificationServiceController {
         })
       }
     }
+
+   
+    dummyEndpointCreated(@Payload() data : {email:string})
+    {
+       this.logger.log(`New Customer created: ${data.email}`);
+       return this.notificationService.sendWelcomeEmail(data.email);
+    }
   }
 
   
