@@ -35,7 +35,7 @@ export class NotificationServiceService {
     const message = `Transaction ${data.transactionId} failed: ${data.error}. Attmepted amount: $${data.amount} from ${data.from}`;
     this.logger.warn(message);
 
-    return {status: 'failed', message}
+    return {status: 'failedd', message}
   }
 
   
